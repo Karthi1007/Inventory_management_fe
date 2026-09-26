@@ -1,6 +1,3 @@
-const API_URL =
-  import.meta.env.MODE === "production"
-    ? "/api"
-    : "http://localhost:5000/api";
+const API_URL = "https://inventory-management-be-two.vercel.app/api";
 
 export { API_URL };
