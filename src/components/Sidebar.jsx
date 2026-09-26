@@ -1,6 +1,15 @@
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { IoMdLogOut } from "react-icons/io";
+
+import actions from "../redux/auth/Actions";
 
 function Sidebar() {
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  const { user } = useSelector((state) => state.authReducer);
+
   const menuItems = [
     {
       label: "Dashboard",
@@ -12,20 +21,29 @@ function Sidebar() {
       path: "/products",
       icon: "▤",
     },
-    {
-      label: "Stock Management",
-      path: "/stock",
-      icon: "↕",
-    },
-    {
-      label: "Analytics & AI",
-      path: "/analytics",
-      icon: "◒",
-    },
+    // {
+    //   label: "Stock Management",
+    //   path: "/stock",
+    //   icon: "↕",
+    // },
+    // {
+    //   label: "Analytics & AI",
+    //   path: "/analytics",
+    //   icon: "◒",
+    // },
   ];
+
+  const handleLogout = () => {
+    dispatch({
+      type: actions.USER_LOGOUT,
+    });
+
+    navigate("/login");
+  };
 
   return (
     <aside className="sidebar">
+      {/* BRAND */}
       <div className="brand">
         <div className="brand-logo">IA</div>
 
@@ -35,6 +53,7 @@ function Sidebar() {
         </div>
       </div>
 
+      {/* MENU */}
       <nav className="sidebar-nav">
         <p className="nav-section-title">MAIN MENU</p>
 
@@ -52,21 +71,30 @@ function Sidebar() {
         ))}
       </nav>
 
+      {/* USER */}
       <div className="sidebar-bottom">
-        <NavLink to="/settings" className="nav-item">
-          <span className="nav-icon">⚙</span>
-          <span>Settings</span>
-        </NavLink>
-
         <div className="sidebar-user">
-          <div className="avatar">K</div>
-
-          <div>
-            <strong>Karthi</strong>
-            <span>Administrator</span>
+          <div className="avatar">
+            {user?.name?.charAt(0)?.toUpperCase() || "K"}
           </div>
 
-          <span className="user-more">•••</span>
+          <div>
+            <strong>{user?.name || "Karthi"}</strong>
+            <span>
+              {user?.role
+                ? user.role.charAt(0).toUpperCase() + user.role.slice(1)
+                : "Administrator"}
+            </span>
+          </div>
+
+          <button
+            type="button"
+            onClick={handleLogout}
+            className="user-more"
+            title="Logout"
+          >
+            <IoMdLogOut size={24} />
+          </button>
         </div>
       </div>
     </aside>
